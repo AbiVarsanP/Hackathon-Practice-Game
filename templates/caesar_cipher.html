@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caesar Cipher Task</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000000e4;
+            color: rgb(184, 184, 184);
+        }
+
+        /* Navbar Styling */
+        /* .navbar {
+            background-color: #b30000e0;
+            overflow: hidden;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        } */
+
+        .navbar {
+            background-color: #b30000e0;
+            padding: 10px;
+            /* overflow: hidden; */
+            width: full;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            /* position: fixed; */
+            top: 0;
+            z-index: 10;
+        }
+
+        .navbar a {
+            float: left;
+            display: block;
+            color: rgb(0, 0, 0);
+            text-align: center;
+            padding: 10px;
+            text-decoration: none;
+            background-color: white;
+            border-radius: 10px;
+            border: 2px solid white;
+        }
+
+        .navbar a:hover {
+            background-color: #adadad;
+            border: 2px solid black;
+            color: black;
+        }
+
+        /* Task Container Styling */
+        .task-container {
+            background-color: #fd4a4a7f;
+            border-radius: 10px;
+            border: 2px solid white;
+            padding: 3px 20px;
+            width: 400px;
+            margin: 20px auto;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .task-container h1 {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 2px solid white;
+            border-radius: 5px;
+            background-color: #000000e4;
+            color: #ffffff;
+        }
+
+        button {
+            background-color: white;
+            color: #b30000e0;
+            border: 2px solid white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #adadad;
+            color: black;
+            border: 2px solid black;
+        }
+
+        .message {
+            color: red;
+            font-weight: bold;
+        }
+
+        /* Letter Box Container */
+        .letter-box {
+            background-color: #fd4a4a7f;
+            border-radius: 10px;
+            border: 2px solid white;
+            padding: 0px 20px;
+            width: 680px;
+            margin: 20px auto;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        /* Button Grid Styling */
+        .letter-buttons {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            margin-top: 20px;
+        }
+
+        .letter-buttons button {
+            width: 60px;
+            height: 60px;
+            background-color: white;
+            color: #b30000e0;
+            border: 2px solid white;
+            border-radius: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .letter-buttons button:hover {
+            background-color: #adadad;
+            color: black;
+            border: 2px solid black;
+        }
+
+        .extra-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .message {
+            margin-top: 10px;
+            font-weight: bold;
+            color: red;
+        }
+
+        .login a {
+            float: left;
+            display: block;
+            color: rgb(0, 0, 0);
+            text-align: center;
+            padding: 10px;
+            text-decoration: none;
+            background-color: white;
+            border-radius: 10px;
+            border: 2px solid white;
+        }
+
+        .login {
+            display: flex;
+        }
+
+        .head {
+            font-size: 30px;
+            font-weight: bold;
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="head">Crackathon.</div>
+        <div class="login">
+            <a href="{{ url_for('home') }}">HOME</a>
+        </div>
+    </div>
+
+    <div class="boxes">
+        <!-- Letter Box Container (Now Above) -->
+        <div class="letter-box">
+            <h2>ARRANGE IN ORDER</h2>
+            <h3>Find _ & arrange : UA_W_ _TH</h3>
+            <input type="text" id="letter-input" placeholder="Click a letter" readonly>
+            <div class="letter-buttons">
+                <button onclick="addLetter('U')">A</button>
+                <button onclick="addLetter('T')">B</button>
+                <button onclick="addLetter('A')">H</button>
+                <button onclick="addLetter('W')">Q</button>
+                <button onclick="addLetter('B')">T</button>
+                <button onclick="addLetter('V')">U</button>
+                <button onclick="addLetter('Q')">V</button>
+                <button onclick="addLetter('H')">W</button>
+            </div>
+
+            <div class="extra-buttons">
+                <button onclick="eraseInput()">Erase</button>
+                <button onclick="submitInput()">Submit</button>
+            </div>
+
+            <p id="result-message" class="message"></p>
+        </div>
+
+        <!-- Task Container with Hint (Unlocked) -->
+        <div class="task-container" id="task-container">
+            <h1>Hint: THIRD</h1>
+            <p>Backtrack the finded word by using the "HINT"</p>
+            <h3>Eg: U > T = A , A > H = S</h3>
+            <form method="POST">
+                <input type="text" name="caesar_input" placeholder="Enter decoded text" id="caesar-input">
+                <button type="submit" id="caesar-submit">Submit</button>
+            </form>
+            {% if message %}
+                <p class="message">{{ message }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- JavaScript for Adding Letters to Input -->
+    <script>
+        function addLetter(letter) {
+            document.getElementById('letter-input').value += letter;
+        }
+
+        function eraseInput() {
+            const inputField = document.getElementById('letter-input');
+            const currentValue = inputField.value;
+
+            // Remove the last character from the input field
+            inputField.value = currentValue.slice(0, -1);
+            document.getElementById('result-message').textContent = '';
+        }
+
+        function submitInput() {
+            const input = document.getElementById('letter-input').value;
+            const correctSequence = "UABWQVTH";
+            const resultMessage = document.getElementById('result-message');
+
+            // Check if the input is correct
+            if (input === correctSequence) {
+                resultMessage.textContent = "Correct Sequence!";
+                resultMessage.style.color = "green";
+                // The task box is now always unlocked
+            } else {
+                resultMessage.textContent = "Incorrect Sequence, Try Again!";
+                resultMessage.style.color = "red";
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Task</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000000e4;
+            color: rgb(184, 184, 184);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            transition: background-color 1.2s ease; /* Smooth background color transition */
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background-color: #b30000e0;
+            width: 100%;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: rgb(0, 0, 0);
+            text-align: center;
+            padding: 10px;
+            text-decoration: none;
+            background-color: white;
+            border-radius: 10px;
+            border: 2px solid white;
+            margin-right: 10px;
+        }
+
+        .navbar a:hover {
+            background-color: #adadad;
+            border: 2px solid black;
+            color: black;
+        }
+
+        /* Hint Box Styling */
+        .hint {
+            background-color: #fd4a4a7f; /* Changed to match login container */
+            border-color: black;
+            border-radius: 20px;
+            padding: 0px 30px;
+            margin-top: 20px;
+            border: 2px solid;
+            color: rgb(255, 255, 255);
+            text-align: center;
+            width: 900px;
+            align-self: center; /* Center the hint box */
+        }
+
+        /* Centered Image and Input Box */
+        .content-container {
+            display: flex; /* Use flexbox to arrange items in a row */
+            justify-content: center; /* Center items horizontally */
+            align-items: center; /* Align items to the top */
+            margin-top: 20px;
+             /* Add margin on top */
+        }
+
+        /* Image Container Styling */
+        .image-container,
+        .rotatable-image-container,
+        .number-locker {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 100px; /* Add horizontal margin between containers */
+        }
+
+        .image-container img,
+        .rotatable-image-container img {
+            width: 200px; /* Adjust the image size as needed */
+            height: auto;
+            transition: transform 0.5s; /* Smooth transition for rotation */
+        }
+
+        /* Input Box Styling */
+        .input-box {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .input-box input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid white;
+            border-radius: 5px;
+            background-color: #333;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .input-box input[type="submit"] {
+            padding: 10px 20px;
+            background-color: white;
+            color: #b30000e0;
+            border: 2px solid white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .input-box input[type="submit"]:hover {
+            background-color: #adadad;
+            border: 2px solid black;
+            color: black;
+        }
+
+        .head {
+            font-weight: bold;
+            font-size: 30px;
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+            font-size: 14px;
+            display: none; /* Hidden initially */
+        }
+
+        /* Transition for smooth fading */
+        .fade-out {
+            transition: opacity 1.2s ease; /* Smooth fade out */
+            opacity: 0; /* Initially transparent */
+        }
+
+        .rotatable-image-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative; /* Make the container relative for absolute positioning */
+        }
+
+        /* Small Image Container */
+        .small-image-container {
+            position: absolute; /* Position small image absolutely */
+            top: 34%; /* Center vertically */
+            left: 50%; /* Center horizontally */
+            transform: translate(-50%, -50%); /* Adjust for centering */
+        }
+
+        /* Style for button container */
+        .rotatable-image-container div {
+            display: flex;
+            gap: 10px; /* Space between buttons */
+            margin-top: 10px; /* Add some margin above the buttons */
+        }
+
+        /* Number Locker Styling */
+        .number-locker {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .number-locker input[type="text"] {
+            width: 100px;
+            margin-bottom: 10px; /* Add margin below the input box */
+        }
+
+        .number-row {
+            display: flex;
+            gap: 10px; /* Space between buttons */
+            margin-bottom: 10px; /* Add margin below each row */
+        }
+
+        .number-locker button {
+            padding: 10px;
+            font-size: 16px;
+            background-color: white;
+            color: #b30000e0;
+            border: 2px solid white;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .number-locker button:hover {
+            background-color: #adadad;
+            border: 2px solid black;
+            color: black;
+        }
+
+        /* Added styles for rotate buttons */
+        .rotate-button {
+            padding: 10px;
+            font-size: 16px;
+            background-color: white;
+            color: #b30000e0;
+            border: 2px solid white;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .rotate-button:hover {
+            background-color: #adadad;
+            border: 2px solid black;
+            color: black;
+        }
+        .end{
+            /* display: none; */
+            position: absolute;
+            top: 10%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- <div class="end">
+        <img src="/static/trophy.jpg" alt="">
+        <h3>CONGURATULATIONS!!!</h3>
+    </div> -->
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="head">Crackathon</div>
+        <div>
+            <a href="/home">Home</a>
+        </div>
+    </div>
+
+    <!-- Hint Box -->
+    <div class="hint">
+        <h3>1. Set big circle 1 to 12'o clock direction</h3>
+        <h3>2. Set small circle 1 to 2'o clock direction</h3>
+        <h3>3. (multiple 11'o clock number on both clocks) + (multiple 2'o clock numbers on both clocks)</h3>
+        <h3>4. Founded number is key to the Locker</h3>
+    </div>
+
+    <!-- Centered Image and Input Box -->
+    <div class="content-container">
+        <div class="rotatable-image-container">
+            <img id="rotatableImage" src="/static/clock.avif" alt="Rotatable Image" style="width: 200px; border-radius: 50%;">
+            <div>
+                <button id="rotateButton" class="rotate-button" onclick="toggleRotation()">Start Rotate</button>
+                <button id="smallRotateButton" class="rotate-button" onclick="toggleSmallRotation()">Start Rotate Small</button>
+            </div>
+
+            <!-- Small Rotatable Image inside the big image -->
+            <div class="small-image-container">
+                <img id="smallRotatableImage" src="/static/clock.avif" alt="Small Rotatable Image" style="width: 100px;border-radius: 50%;">
+            </div>
+        </div>
+
+        <div class="number-locker">
+            <input type="text" id="lockerInput" placeholder="Number Lock">
+
+            <!-- Arrange numbers in rows -->
+            <div class="number-row">
+                <button onclick="addNumber(1)">1</button>
+                <button onclick="addNumber(2)">2</button>
+                <button onclick="addNumber(3)">3</button>
+            </div>
+            <div class="number-row">
+                <button onclick="addNumber(4)">4</button>
+                <button onclick="addNumber(5)">5</button>
+                <button onclick="addNumber(6)">6</button>
+            </div>
+            <div class="number-row">
+                <button onclick="addNumber(7)">7</button>
+                <button onclick="addNumber(8)">8</button>
+                <button onclick="addNumber(9)">9</button>
+            </div>
+            <div class="number-row">
+                <button onclick="addNumber(0)">0</button>
+            </div>
+            <button onclick="checkLocker()">Check Locker</button> <!-- Button to check locker input -->
+        </div>
+
+        <div class="image-container">
+            <!-- Static image initially displayed -->
+            <img id="taskImage" src="/static/hand.png" alt="Static Image">
+            <div class="input-box">
+                <input type="text" id="userAnswer" placeholder="Your Answer">
+                <input type="submit" value="Submit" onclick="checkAnswer()">
+                <div class="error" id="errorMessage">Please enter the correct answer!</div> <!-- Error message -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Rotatable Image Functionality
+        let isRotating = false;
+        let isSmallRotating = false;
+
+        function toggleRotation() {
+            const rotateButton = document.getElementById('rotateButton');
+            const rotatableImage = document.getElementById('rotatableImage');
+
+            if (!isRotating) {
+                rotateButton.textContent = "Stop Rotate";
+                isRotating = true;
+                rotationInterval = setInterval(() => {
+                    rotatableImage.style.transform = `rotate(${(parseFloat(rotatableImage.style.transform.replace(/[^0-9]/g, '')) || 0) + 5}deg)`; // Rotate every 100ms
+                }, 100);
+            } else {
+                rotateButton.textContent = "Start Rotate";
+                isRotating = false;
+                clearInterval(rotationInterval); // Stop rotation
+            }
+        }
+
+        function toggleSmallRotation() {
+            const smallRotateButton = document.getElementById('smallRotateButton');
+            const smallRotatableImage = document.getElementById('smallRotatableImage');
+
+            if (!isSmallRotating) {
+                smallRotateButton.textContent = "Stop Rotate Small";
+                isSmallRotating = true;
+                smallRotationInterval = setInterval(() => {
+                    smallRotatableImage.style.transform = `rotate(${(parseFloat(smallRotatableImage.style.transform.replace(/[^0-9]/g, '')) || 0) + 5}deg)`; // Rotate every 100ms
+                }, 100);
+            } else {
+                smallRotateButton.textContent = "Start Rotate Small";
+                isSmallRotating = false;
+                clearInterval(smallRotationInterval); // Stop small rotation
+            }
+        }
+
+        // Function to add number to locker input
+        function addNumber(num) {
+            const lockerInput = document.getElementById("lockerInput");
+            lockerInput.value += num; // Append number to the input
+        }
+
+        // Function to check locker input
+        function checkLocker() {
+            const lockerInput = document.getElementById("lockerInput").value;
+            if (lockerInput === "123") { // Check if input matches correct number
+                alert("Shift all letter 1 forward : 'HQNMLZM' ,& enter to finish"); // Notify user of success
+            } else {
+                alert("Incorrect number!"); // Notify user of failure
+            }
+        }
+
+        // Function to check user answer
+        function checkAnswer() {
+            const answer = document.getElementById("userAnswer").value.trim(); // Get answer and trim whitespace
+            const correctAnswer = "ironman"; // Define correct answer
+            const errorMessage = document.getElementById("errorMessage"); // Get error message element
+
+            if (answer.toLowerCase() === correctAnswer.toLowerCase()) { // Compare answers case-insensitively
+                taskImage.src = "/static/hand.gif"; 
+                taskImage.style = "width:255px";  // Change the image to GIF
+                errorMessage.style.display = "none"; // Hide error message if answer is correct
+
+                // Wait for 1.2 seconds before starting to erase elements
+                setTimeout(() => {
+                    // Add fade-out class to all body children to create the fade effect
+                    Array.from(document.body.children).forEach(element => {
+                        element.classList.add('fade-out');
+                    });
+
+                    // Change background color after fading
+                    setTimeout(() => {
+                        document.body.style.backgroundColor = 'white';
+                         // Set background color to white
+                    }, 1200); // Wait for fade duration
+                }, 1200); // 1.2 seconds delay before starting to erase
+            } else {
+                errorMessage.style.display = "block"; // Show error message if answer is incorrect
+            }
+        }
+    </script>
+</body>
+</html>

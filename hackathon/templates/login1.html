@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000000e4;
+            color: rgb(184, 184, 184);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: auto;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background-color: #b30000e0;
+            padding: 10px;
+            padding-left: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            z-index: 10;
+        }
+
+        .head {
+            font-size: 30px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .navbar button {
+            color: rgb(0, 0, 0);
+            text-align: center;
+            padding: 10px;
+            text-decoration: none;
+            background-color: white;
+            border-radius: 10px;
+            border: 2px solid white;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .navbar button:hover {
+            background-color: #adadad;
+            border: 2px solid black;
+            color: black;
+        }
+
+        .navbar a:hover{
+            background-color: #adadad;
+            border: 2px solid black;
+            color: black;
+        }
+
+        /* Login Container */
+        .login-container {
+            background-color: #fd4a4a7f;
+            color: #ffffff;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
+            margin-top: 20px; /* Adjusted to reduce the gap after moving hint prompt */
+            border: 2px solid #ffffff;
+            text-align: center;
+        }
+
+        h2 {
+            color: #fff;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        input[type="text"], input[type="password"] {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid black;
+            border-radius: 4px;
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        input[type="submit"] {
+            padding: 10px;
+            border: none;
+            border-radius: 4px solid;
+            border-color: rgb(255, 255, 255);
+            background-color: #2d0000;
+            color: #ffffffe0;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #ee1111;
+        }
+
+        /* Hint Box and Button Styling */
+        button {
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            background-color: #2d0000;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #ee1111;
+        }
+
+        /* Hint Prompt Styling */
+        #hint-prompt {
+            display: none;
+            background-color: #fd4a4a7f;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 70px; /* Added margin to avoid overlap with navbar */
+            text-align: center;
+            color: rgb(255, 255, 255);
+        }
+
+        #hint-prompt input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 10px;
+            width: 80%;
+            color: black;
+        }
+
+        #hint-prompt .message {
+            color: red;
+        }
+
+        /* Hidden Button Styling */
+        #hidden-button {
+            /* margin-top: 1000px; */
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #ee1111;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            opacity: 0; /* Start as hidden */
+            transition: opacity 0.3s; /* Smooth transition */
+        }
+
+        #hidden-button.show {
+            opacity: 1; /* Show when hovered */
+        }
+
+        #hidden-button:hover{
+            opacity: 1;
+        }
+
+        /* Hints Section */
+        #hints {
+        display: none;
+        background-color: #fd4a4a7f; /* Changed to match login container */
+        border-color: black;
+        border-radius: 20px;
+        padding: 30px;
+        margin-top: 20px;
+        border: 2px solid;
+        color: rgb(255, 255, 255);
+        }
+
+
+        /* Navbar Links */
+        .login a {
+            float: left;
+            display: block;
+            color: rgb(0, 0, 0);
+            text-align: center;
+            padding: 10px;
+            text-decoration: none;
+            background-color: white;
+            border-radius: 10px;
+            border: 2px solid white;
+            margin-right: 10px;
+        }
+
+        .login {
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="head">Crackathon.</div>
+        <div class="login">
+            <a href="{{ url_for('home') }}">HOME</a>
+            <button id="hint-button" onclick="showHintPrompt()">HINT</button>
+        </div>
+    </div>
+
+    <!-- Hint Prompt (moved above login container) -->
+    <div id="hint-prompt">
+        <div class="message"></div>
+        <p id="prompt-message">What do you want from me?</p>
+        <input type="text" id="user-input" placeholder="Type here...">
+        <button onclick="submitHintResponse()">Submit</button>
+    </div>
+
+    <!-- Login Container -->
+    <div class="login-container">
+        <h2>Login</h2>
+        <form method="post">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" value="{{fixed_username}}" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <input type="submit" value="Login">
+        </form>
+        {% if message %}
+            <p class="{{ message_class }}">{{ message }}</p>
+        {% endif %}
+    </div>
+
+    <!-- Hidden Button -->
+    <button id="hidden-button" onclick="showHiddenHint()">Click</button>
+
+    <!-- Hints Section -->
+    <div id="hints">
+        <div class="hint-box">
+            <strong>Username - Hint:</strong> if sys = 1 , 1 = sys then 1 = ?
+        </div>
+        <div class="hint-box">
+            <strong>Password - Hint:</strong> If username = login success , login success = password then Password = ?
+        </div>
+    </div>
+
+    <script>
+        var hintPrompt = document.getElementById("hint-prompt");
+        var promptMessage = document.getElementById("prompt-message");
+        var userInput = document.getElementById("user-input");
+        var hiddenButton = document.getElementById("hidden-button");
+        var hints = document.getElementById("hints");
+        var messageElement = document.querySelector("#hint-prompt .message");
+        var hintButton = document.getElementById("hint-button");
+        var hintsShown = false; // Flag to track if hints have been shown
+
+        function showHintPrompt() {
+            hintPrompt.style.display = "block";
+        }
+
+        function submitHintResponse() {
+            var inputValue = userInput.value.trim().toLowerCase();
+
+            if (inputValue === "hint" && !hintsShown) {
+                hintPrompt.style.display = "none";
+                promptMessage.innerText = "Find the hidden button on this page by moving your mouse over the entire page. Enter the number";
+                hintPrompt.style.display = "block";
+                messageElement.innerText = '';
+            } else if (inputValue === "hints" && !hintsShown) {
+                hintPrompt.style.display = "none";
+                promptMessage.innerText = "Find the hidden button on this page by moving your mouse over the entire page. Enter the number";
+                hintPrompt.style.display = "block";
+                messageElement.innerText = '';
+            } else if (inputValue === "4" && !hintsShown) {
+                hintPrompt.style.display = "none";
+                hints.style.display = "block"; // Show hints if input is 4
+                messageElement.innerText = ''; // Clear previous messages
+                hintButton.disabled = true; // Disable the hint button after showing hints
+                hintsShown = true; // Set hints shown flag
+            } else if (inputValue !== "4" && !hintsShown) {
+                messageElement.innerText = "Incorrect input. Try again!";
+                promptMessage.innerText = "Type hint or hints.";
+            }
+            userInput.value = ""; // Clear the input field
+        }
+
+        function showHiddenHint() {
+            alert('A number related to the freshers day');
+        }
+    </script>
+</body>
+</html>

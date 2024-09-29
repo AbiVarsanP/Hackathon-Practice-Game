@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Task</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000000e4;
+            color: rgb(184, 184, 184);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            transition: background-color 1.2s ease; /* Smooth background color transition */
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background-color: #b30000e0;
+            width: 100%;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: rgb(0, 0, 0);
+            text-align: center;
+            padding: 10px;
+            text-decoration: none;
+            background-color: white;
+            border-radius: 10px;
+            border: 2px solid white;
+            margin-right: 10px;
+        }
+
+        .navbar a:hover {
+            background-color: #adadad;
+            border: 2px solid black;
+            color: black;
+        }
+
+        /* Centered Image Styling */
+        .image-container {
+            align-items: center;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .image-container img {
+            width: 200px; /* Adjust the image size as needed */
+            height: auto;
+        }
+
+        /* Input Box Styling */
+        .input-box {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .input-box input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid white;
+            border-radius: 5px;
+            background-color: #333;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .input-box input[type="submit"] {
+            padding: 10px 20px;
+            background-color: white;
+            color: #b30000e0;
+            border: 2px solid white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .input-box input[type="submit"]:hover {
+            background-color: #adadad;
+            border: 2px solid black;
+            color: black;
+        }
+
+        .head {
+            font-weight: bold;
+            font-size: 30px;
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+            font-size: 14px;
+            display: none; /* Hidden initially */
+        }
+
+        /* Transition for smooth fading */
+        .fade-out {
+            transition: opacity 1.2s ease; /* Smooth fade out */
+            opacity: 0; /* Initially transparent */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="head">Crackathon</div>
+        <div>
+            <a href="/home">Home</a>
+        </div>
+    </div>
+
+    <!-- Centered Image and Input Box -->
+    <div class="image-container">
+        <!-- Static image initially displayed -->
+        <img id="taskImage" src="/static/hand.png" alt="Static Image">
+    </div>
+
+    <!-- Input Box with Submit Button -->
+    <div class="input-box">
+        <input id="answerInput" type="text" placeholder="Enter your answer here">
+        <input type="submit" value="Submit" onclick="checkAnswer()">
+        <p class="error" id="errorMessage">Incorrect answer. Try again!</p>
+    </div>
+
+    <script>
+        function checkAnswer() {
+            const answer = document.getElementById('answerInput').value.toLowerCase(); // Convert input to lowercase
+            const taskImage = document.getElementById('taskImage');
+            const errorMessage = document.getElementById('errorMessage');
+
+            if (answer === "ironman") {
+                taskImage.src = "/static/hand.gif";  // Change the image to GIF
+                errorMessage.style.display = "none"; // Hide error message if answer is correct
+
+                // Wait for 1.2 seconds before starting to erase elements
+                setTimeout(() => {
+                    // Add fade-out class to all body children to create the fade effect
+                    Array.from(document.body.children).forEach(element => {
+                        element.classList.add('fade-out');
+                    });
+
+                    // Change background color after fading
+                    setTimeout(() => {
+                        document.body.style.backgroundColor = 'white'; // Set background color to white
+                    }, 1200); // Wait for fade duration
+                }, 1200); // 1.2 seconds delay before starting to erase
+            } else {
+                errorMessage.style.display = "block"; // Show error message if answer is incorrect
+            }
+        }
+    </script>
+
+</body>
+</html>
